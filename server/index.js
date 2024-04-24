@@ -10,8 +10,9 @@ const app = express();
 
 // Middleware
 const corsOptions = {
-    origin: 'https://marketplace-frontend-blue.vercel.app',
-    optionsSuccessStatus: 200,
+    origin: ['https://marketplace-frontend-blue.vercel.app'],
+    methods: ["POST", "GET", "PUT", "DELETE"],
+    credentials: true
 };
 
 app.use(cors(corsOptions));
