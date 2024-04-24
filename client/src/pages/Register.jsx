@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Flex, Input, Typography, Form, Button, Alert, Spin } from 'antd';
+import { Card, Flex, Input, Typography, Form, Button, Alert, Spin, InputNumber } from 'antd';
 import { Link } from 'react-router-dom';
 import useRegister from '../hooks/useRegister';
 
@@ -63,7 +63,7 @@ const Register = () => {
                         required: true,
                         message: 'Please enter your phone number here!',
                     }]}>
-                        <Input placeholder='Enter your phone number here' />
+                        <InputNumber placeholder='Enter your phone number here' />
                     </Form.Item>
 
                     <Form.Item label="Password" name="password" rules={[{
