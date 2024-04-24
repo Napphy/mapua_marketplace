@@ -4,42 +4,30 @@ const cors = require('cors');
 const authRouter = require('./routes/authRoutes');
 require('dotenv').config();
 
-
-
 const app = express();
 
 // Middleware
-app.use(cors({
-    origin: ["https://marketplace-frontend-blue.vercel.app"],
-    methods: ["POST", "GET", "PUT", "DELETE"],
-    credentials: true,
-}));
-
-
-// Set CORS headers for all responses
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://marketplace-frontend-blue.vercel.app');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    next();
-});
-
-
-
-
-app.use(express.json())
+app.use(express.json());
+app.use(cors());
 
 // Routes
 app.use(authRouter);
 
-//DB Connection
-mongoose
-.connect(process.env.MONGO_URI)
-.then(() => console.log('Successfully connected to your MongoDB!'))
-.catch((error) => console.error('Failed to connect to your MongoDB due to: ', error));
+// Set CORS headers for specific routes
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://marketplace-frontend-blue.vercel.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', true);
+    next();
+});
 
-//Global
+// DB Connection
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('Successfully connected to your MongoDB!'))
+    .catch((error) => console.error('Failed to connect to your MongoDB due to: ', error));
+
+// Global Error Handler
 app.use((err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
@@ -50,9 +38,8 @@ app.use((err, req, res, next) => {
     });
 });
 
-//Server stuff
-port = process.env.PORT || 3002;
-
+// Server setup
+const port = process.env.PORT || 3002;
 app.listen(port, () => {
     console.log(`App running on ${port}`);
-})
+});
