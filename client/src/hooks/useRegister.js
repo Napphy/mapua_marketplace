@@ -12,7 +12,6 @@ const useRegister = () => {
             setError(null);
             setLoading(true);
             const res = await fetch('https://marketplace-api-xi.vercel.app/signup', {
-                method: 'POST',
                 body: JSON.stringify(values),
             });
 
