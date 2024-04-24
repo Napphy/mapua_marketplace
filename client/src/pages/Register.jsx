@@ -63,7 +63,7 @@ const Register = () => {
                         required: true,
                         message: 'Please enter your phone number here!',
                     }]}>
-                        <InputNumber placeholder='Enter your phone number here' />
+                        <Input placeholder='Enter your phone number here' />
                     </Form.Item>
 
                     <Form.Item label="Password" name="password" rules={[{
