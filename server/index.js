@@ -12,7 +12,8 @@ const app = express();
 const corsOptions = {
     origin: ['https://marketplace-frontend-blue.vercel.app'],
     methods: ["POST", "GET", "PUT", "DELETE"],
-    credentials: true
+    credentials: true,
+    headers: ['X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version']
 };
 
 app.use(cors(corsOptions));
