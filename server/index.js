@@ -9,14 +9,11 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-const corsOptions = {
-    origin: ['https://marketplace-frontend-blue.vercel.app'],
+app.use(cors({
+    origin: ["https://marketplace-frontend-blue.vercel.app"],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
-    headers: ['X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version']
-};
-
-app.use(cors(corsOptions));
+}));
 app.use(express.json())
 
 // Routes
