@@ -9,10 +9,6 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors());
-
-// Routes
-app.use(authRouter);
-
 // Set CORS headers for specific routes
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'https://marketplace-frontend-blue.vercel.app');
@@ -21,6 +17,11 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Credentials', true);
     next();
 });
+
+
+// Routes
+app.use(authRouter);
+
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI)
