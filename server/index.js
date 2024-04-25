@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRouter = require('./routes/authRoutes');
+const allowCors = require('./utils/allowCors');
 require('dotenv').config();
 
 const app = express();
@@ -9,14 +10,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors());
-// Set CORS headers for specific routes
-// app.use((req, res, next) => {
-//     res.header('Access-Control-Allow-Origin', 'https://marketplace-frontend-blue.vercel.app');
-//     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//     res.header('Access-Control-Allow-Credentials', true);
-//     next();
-// });
+app.use(allowCors);
 
 
 // Routes
