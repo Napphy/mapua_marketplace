@@ -10,8 +10,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors());
-<<<<<<< HEAD
-=======
+
 // Set CORS headers for specific routes
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'https://marketplace-frontend-blue.vercel.app');
@@ -20,7 +19,6 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Credentials', true);
     next();
 });
->>>>>>> parent of 66bec28 (change server host)
 
 
 // Routes
@@ -34,6 +32,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Global Error Handler
 app.use((err, req, res, next) => {
+    console.log('Response Headers:', res.getHeaders());
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
 
