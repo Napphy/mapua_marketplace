@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const createError = require('../utils/appErrors');
+const Product = require('../models/productModel');
 
 
 // Registering
@@ -90,3 +91,30 @@ exports.login = async (req, res, next) => {
    
 
 };
+
+
+
+ //Uploading products
+exports.upload = async (req, res, next) => {
+        try {
+            const newUpload = await Product.create({
+                ...req.body,
+            });
+    
+            res.status(201).json({
+                status: 'success',
+                message: 'Product uploaded successfully!',
+                upload: {
+                    _id: newUpload._id,
+                    item: newUpload.item,
+                    price: newUpload.price,
+                    description: newUpload.description,
+                    createdBy: newUpload.createdBy,
+                    image: newUpload.image,
+                },
+            });
+        } catch (error) {
+            return next(new createError('Error: ', error)); // Make sure createError is implemented correctly
+        }
+}
+    
