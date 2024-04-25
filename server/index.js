@@ -11,9 +11,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// cors pls work
-app.use(allowCors);
-
 
 // Routes
 app.use(authRouter);

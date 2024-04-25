@@ -11,7 +11,7 @@ const useLogin = () => {
         try{
             setError(null);
             setLoading(true);
-            const res = await fetch('https://marketplace-api-xi.vercel.app/login', {
+            const res = await fetch('https://marketplace-3ph4.onrender.com/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
