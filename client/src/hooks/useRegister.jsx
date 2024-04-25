@@ -11,7 +11,7 @@ const useRegister = () => {
         try{
             setError(null);
             setLoading(true);
-            const res = await fetch('https://marketplace-api-xi.vercel.app/signup', {
+            const res = await fetch('marketplace-api-xi.vercel.app/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
