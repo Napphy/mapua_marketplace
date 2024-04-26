@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { message } from 'antd';
+
 
 const useProduct = () => {
     const [error, setError] = useState(null);
@@ -25,7 +27,7 @@ const useProduct = () => {
                 message.error('Product upload failed!');
             }
         } catch (error) {   
-            message.error('Error uploading product');
+            message.error('Error uploading product', error);
         } finally {
             setLoading(false);
         }
