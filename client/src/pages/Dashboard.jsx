@@ -25,62 +25,39 @@ const Dashboard = () => {
 
   return (
 
-
-    <Card>
-      <Flex vertical gap='small' align='center'>
-        <Avatar size={150} icon={<UserOutlined />} className='avatar' />
-        <Typography.Title level={2} strong className='username'>
-          {userData.name}
-        </Typography.Title>
-        <Button onClick={handleLogout}>Logout</Button>
-      </Flex>
-      
-      <Flex gap ='small' align='center'>
-        <Space>
-          <Button type="primary" onClick={showModal}>
-              Open Modal
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => {
-                Modal.confirm({
-                  title: 'Confirm',
-                  content: 'Bla bla ...',
-                  footer: (_, { OkBtn, CancelBtn }) => (
-                    <>
-                      <Button>Custom Button</Button>
-                      <CancelBtn />
-                      <OkBtn />
-                    </>
-                  ),
-                });
-              }}
-            >
-              Open Modal Confirm
-            </Button>
-        </Space>
-        <Modal
-          open={open}
-          title="Title"
-          onOk={handleOk}
-          onCancel={handleCancel}
-          footer={(_, { OkBtn, CancelBtn }) => (
-            <>
-              <Button>Custom Button</Button>
-              <CancelBtn />
-              <OkBtn />
-            </>
-          )}
-        >
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </Modal>
-      </Flex>
-    </Card>
-    
+    <>
+      <Card>
+        <Flex vertical gap='small' align='center'>
+          <Avatar size={150} icon={<UserOutlined />} className='avatar' />
+          <Typography.Title level={2} strong className='username'>
+            {userData.name}
+          </Typography.Title>
+          <Button onClick={handleLogout}>Logout</Button>
+        </Flex>
+        
+        <Flex gap ='small' align='center'>
+          <Modal
+            open={open}
+            title="Title"
+            onOk={handleOk}
+            onCancel={handleCancel}
+            footer={(_, { OkBtn, CancelBtn }) => (
+              <>
+                <Button>Custom Button</Button>
+                <CancelBtn />
+                <OkBtn />
+              </>
+            )}
+          >
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+          </Modal>
+        </Flex>
+      </Card>
+    </>
   
   )
 }
