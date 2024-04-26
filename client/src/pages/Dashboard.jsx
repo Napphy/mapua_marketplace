@@ -1,24 +1,20 @@
 import { Avatar, Button, Card, Typography, Flex, Space, Modal, Form, Input, InputNumber, Upload, message  } from 'antd';
 import React, { useState } from 'react'; // Import useState from React
 import { useAuth } from '../contexts/AuthContext';
-import { UserOutlined, UploadOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import useProduct from '../hooks/useProduct';
+import axios from 'axios';
 
 const Dashboard = () => {
   const { userData, logout } = useAuth();
   const [form] = Form.useForm(); // Create form instance
   const { uploadProduct } = useProduct();
   const { TextArea } = Input;
-  const [uploadedImage, setUploadedImage] = useState(null);
+  const [img, setImg] = useState(null);
 
   const handleLogout = async() => {
     await logout();
   }
-
-  const handleProduct = async (values) => {
-    uploadProduct(values);
-
-  };
 
   const [open, setOpen] = useState(false);
 
@@ -27,87 +23,64 @@ const Dashboard = () => {
   };
 
 
+  const handleProduct = (values) => {
+    uploadProduct(values);
+    console.log(values);
+  }
 
-  const handleOk = () => {
-    form.validateFields().then((values) => {
 
-      //to show image 
-      // const imgSrc = `data:image/jpeg;base64,${base64Image}`;
+  const uploadImage = async (type) => {
+    const data = new FormData();
 
-      const productData = { ...values, createdBy: userData.name, image: 'uploadedImage' };
-      handleProduct(productData);
+    const file = type === 'image' ? img : null; // Check if the file is valid
+    if (!file) {
+      throw new Error('No file selected.');
+    }
 
-      form.resetFields(); 
-      setUploadedImage(null);
-      setOpen(false);
-    }).catch((errorInfo) => {
-      console.log('Validation failed:', errorInfo);
-    });
+    data.append("file", type === 'image' ? img : img);
+    data.append("upload_preset", type === 'image' ? 'marketplace_preset' : 'marketplace_preset');
+
+    try {
+     // let cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+      let CLOUD = 'ddttcgieo'
+      let resourceType = type === 'image' ? 'image' : 'video';
+      let api = `https://api.cloudinary.com/v1_1/${CLOUD}/${resourceType}/upload`;
+
+      const res = await axios.post(api, data);
+      const { secure_url } = res.data;
+      console.log(secure_url);
+      return secure_url;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleOk = async () => {
+    try {
+      const imageUrl = await uploadImage('image');
+      if (imageUrl) {
+        form.validateFields().then((values) => {
+          const productData = { ...values, createdBy: userData.name, image: imageUrl };
+          handleProduct(productData);
+          form.resetFields();
+          setImg(null);
+          setOpen(false);
+        });
+      } else {
+        message.error('Failed to upload image to Cloudinary.');
+      }
+    } catch (error) {
+      console.log('Validation failed:', error);
+    }
   };
-
 
   const handleCancel = () => {
     form.resetFields(); 
-    setUploadedImage(null);
+    setImg(null);
     setOpen(false);
   };
 
 
-  // const props = {
-  //   name: 'file',
-  //   headers: {
-  //     authorization: 'authorization-text',
-  //   },
-  //   onChange(info) {
-  //     if (info.file.status !== 'uploading') {
-  //       console.log(info.file, info.fileList);
-  //     }
-  //     if (info.file.status === 'done') {
-  //     const reader = new FileReader();
-  //       reader.onload = (event) => {
-  //         const base64Image = event.target.result;
-  //         setUploadedImage(base64Image);
-  //         message.success(`${info.file.name} file uploaded successfully`);
-  //       }
-  //     } else if (info.file.status === 'error') {
-  //       message.error(`${info.file.name} file upload failed.`);
-  //     }
-  //   },
-  //   progress: {
-  //     strokeColor: {
-  //       '0%': '#108ee9',
-  //       '100%': '#87d068',
-  //     },
-  //     strokeWidth: 3,
-  //     format: (percent) => percent && `${parseFloat(percent.toFixed(2))}%`,
-  //   },
-  // };
-
-
-  const props = {
-    name: 'file',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    progress: {
-      strokeColor: {
-        '0%': '#108ee9',
-        '100%': '#87d068',
-      },
-      strokeWidth: 3,
-      format: (percent) => percent && `${parseFloat(percent.toFixed(2))}%`,
-    },
-  };
 
   return (
 
@@ -145,19 +118,19 @@ const Dashboard = () => {
               // onFinish = {handleProduct}
               autoComplete = "off"
               >
-                <Form.Item label="Item Name" name="item name" rules={[{
+                <Form.Item label="Item Name" name="item" rules={[{
                     required: true,
                     message: 'Please enter item name here!',
                 }]}>
                   <Input placeholder='Enter item name here' />
                 </Form.Item>
-                <Form.Item label="Item Price" name="item price" rules={[{
+                <Form.Item label="Item Price" name="price" rules={[{
                     required: true,
                     message: 'Please enter item price here!',
                 }]}>
                   <Input placeholder='Enter item price here' />
                 </Form.Item>
-                <Form.Item label="Item Description" name="item description" rules={[{
+                <Form.Item label="Item Description" name="description" rules={[{
                     required: true,
                     message: 'Please enter item price here!',
                 }]}>
@@ -174,10 +147,17 @@ const Dashboard = () => {
 
                 {/* Item pic here */}
                 <Form.Item label="Item Image">
-                  <Upload {...props}
+                  {/* <Upload {...props} 
                   >
                     <Button icon={<UploadOutlined />}>Upload</Button>
-                  </Upload>
+                  </Upload> */}
+
+                  <input 
+                    type='file'
+                    accept='image/*'
+                    id='img'
+                    onChange={(e) => setImg((prev) => e.target.files[0])}
+                  />
               </Form.Item>
 
               </Form>
