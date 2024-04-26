@@ -1,7 +1,6 @@
 import React from 'react'
 
 const useProduct = () => {
-    const { login } = useAuth();  
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(null);
 
@@ -20,7 +19,6 @@ const useProduct = () => {
             const data = await res.json();
             if (res.status === 201) {
                 message.success(data.message);
-                // Additional logic here if needed, such as updating state or UI
             } else if (res.status === 400) {
                 setError(data.message);
             } else {
