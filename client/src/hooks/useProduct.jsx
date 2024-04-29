@@ -6,6 +6,8 @@ const useProduct = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(null);
 
+
+
     const uploadProduct = async (values) => {
         try {
             setError(null);
@@ -32,6 +34,7 @@ const useProduct = () => {
             setLoading(false);
         }
     };
+
 
     return { loading, error, uploadProduct };
 }

@@ -114,7 +114,78 @@ exports.upload = async (req, res, next) => {
                 },
             });
         } catch (error) {
-            return next(new createError('Error: ', error)); // Make sure createError is implemented correctly
+            return next(new createError('Error: ', error));
         }
 }
+
+//Getting all products
+exports.getProducts = async (req, res, next) => {
+    try{
+        const products = await Product.find();
+        res.status(200).json({
+            status: 'success',
+            message: 'got products successfully',
+            products,
+        })
+    }catch (error){
+        return next(new createError('Error:', error))
+    }
+}
+
+exports.getProductByUser = async (req, res, next) => {
+    try {
+        const { createdBy } = req.query;
+
+        if (!createdBy) {
+            return next(new Error('createdBy field is required!'));
+        }
+
+        const products = await Product.find({ createdBy });
+
+        if (products.length === 0) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'No products found for this user',
+                products: [],
+            });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Products fetched successfully',
+            products,
+        });
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        next(error); // Pass the error to the error-handling middleware
+    }
+};
+
+
+exports.deleteItem = async (req, res, next) => {
+    try {
+        const { productId } = req.params;
+
+        // Find and delete the product
+        const deletedProduct = await Product.findByIdAndDelete(productId);
+
+        if (!deletedProduct) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'Product not found',
+            });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Product deleted successfully',
+            deletedProduct,
+        });
+    } catch (error) {
+        console.error('Error deleting product:', error);
+        next(error); // Pass the error to the error-handling middleware
+    }
+};
+
+
     
