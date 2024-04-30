@@ -191,8 +191,50 @@ exports.deleteItem = async (req, res, next) => {
 };
 
 exports.editItem = async (req, res, next) => {
-    
-}
+    try {
+        const { productId } = req.params;
+
+        const existingProduct = await Product.findById(productId);
+
+        const updatedFields = {};
+        if (req.body.item && req.body.item !== existingProduct.item) {
+            updatedFields.item = req.body.item;
+        }
+        if (req.body.price && req.body.price !== existingProduct.price) {
+            updatedFields.price = req.body.price;
+        }
+        if (req.body.description && req.body.description !== existingProduct.description) {
+            updatedFields.description = req.body.description;
+        }
+        if (req.body.image && req.body.image !== existingProduct.image) {
+            updatedFields.image = req.body.image;
+        }
+
+
+        if (Object.keys(updatedFields).length === 0) {
+            return res.status(200).json({
+                status: 'success',
+                message: 'No changes detected. Product information remains unchanged.',
+                existingProduct,
+            });
+        }
+
+        Object.assign(existingProduct, updatedFields);
+
+
+        await existingProduct.save();
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Product updated successfully',
+            updatedProduct: existingProduct,
+        });
+    } catch (error) {
+        console.error('Error updating product:', error);
+        next(error);
+    }
+};
+
 
 
     

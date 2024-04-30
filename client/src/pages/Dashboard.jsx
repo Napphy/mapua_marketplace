@@ -17,9 +17,12 @@ const Dashboard = () => {
   const { fetchProductsByUser, products } = getProduct();
   const { TextArea } = Input;
   const [img, setImg] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const { deleteItem } = useActions();
+  const { deleteItem, editItem } = useActions();
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
+  const [editForm] = Form.useForm();
+
+  
 
   useEffect (() => {
     fetchProductsByUser(userData.name);
@@ -108,6 +111,41 @@ const Dashboard = () => {
         console.error(error);
       }
     }
+
+
+  const handleEdit = (productId) => {
+    const itemToEdit = products.find((item) => item._id === productId);
+      if (itemToEdit) {
+          setCurrentItem(itemToEdit);
+          setEditModalVisible(true);
+      }
+  };
+
+  const handleEditItem = async (values) => {
+    try {
+      const { item, price, description, image } = values; 
+      const dataToUpdate = { item, price, description, image }; 
+      const success = await editItem(currentItem._id, dataToUpdate); 
+      if (success) {
+        message.success('Item edited successfully');
+        setEditModalVisible(false);
+        fetchProductsByUser(userData.name);
+        editForm.resetFields();
+      } else {
+        message.error('Failed to edit item');
+      }
+    } catch (error) {
+      console.error('Error editing item:', error);
+      message.error('Failed to edit item');
+    }
+  };
+  
+  
+
+  const editModalCancel = async () => {
+    editForm.resetFields();
+    setEditModalVisible(false);
+  }
   
 
   const columns = [
@@ -137,7 +175,7 @@ const Dashboard = () => {
       key: 'actions',
       render: (text, record) => (
         <Space size="small">
-          <Button type="primary" onClick={() => handleEdit(products._id)}>Edit</Button>
+          <Button type="primary" onClick={() => handleEdit(record._id)}>Edit</Button>
           <Button danger onClick={() => handleDelete(record)}>Delete</Button>
         </Space>
       ),
@@ -147,7 +185,7 @@ const Dashboard = () => {
 const handleDelete = async (record) => {
   try {
     const { _id } = record;
-    const success = await deleteItem(_id); 
+    await deleteItem(_id); 
     fetchProductsByUser(userData.name); 
   }catch(error){
     message(error);
@@ -245,6 +283,45 @@ const handleDelete = async (record) => {
               </Form.Item>
         </Form>
       </Modal>
+            <Modal
+                title="Edit Item"
+                open={editModalVisible}
+                onCancel={editModalCancel}
+                footer={[
+                  <Button key="back" onClick={editModalCancel}>
+                    Cancel
+                  </Button>,
+                  <Button key="submit" type="primary" onClick={handleEditItem}>
+                    Submit
+                  </Button>,
+                ]}
+            >
+                <Form
+                    form={editForm}
+                    layout="vertical"
+                >
+                    <Form.Item label="Item Name" name="item" initialValue={currentItem?.item}>
+                        <Input placeholder="Enter item name" />
+                    </Form.Item>
+                    <Form.Item label="Price" name="price" initialValue={currentItem?.price}>
+                        <InputNumber placeholder="Enter price" />
+                    </Form.Item>
+                    <Form.Item label="Description" name="description" initialValue={currentItem?.description}>
+                        <Input.TextArea placeholder="Enter description" />
+                    </Form.Item>
+                    <Form.Item label="Description" name="image">
+                        <input 
+                        type='file'
+                        accept='image/*'
+                        id='img'
+                        onChange={(e) => setImg((prev) => e.target.files[0])}
+                        />
+                    </Form.Item>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit">Submit</Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
     </>
   
   )
