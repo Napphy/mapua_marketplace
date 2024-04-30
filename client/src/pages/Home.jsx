@@ -3,7 +3,7 @@ import { Button, Card, Space, Modal } from 'antd';
 import getProduct from '../hooks/getProduct';
 import NavBar from './components/Navbar';
 import { useAuth } from '../contexts/AuthContext';
-import https from 'https'; 
+import axios from 'axios';
 
 const Home = () => {
     const { userData } = useAuth();
@@ -49,13 +49,18 @@ const Home = () => {
         // const mailtoUrl = `mailto:${email}`;
         // window.open(mailtoUrl, '_blank');
 
+        if (number.startsWith('0')) {
+            // Replace '0' with '+639'
+            number = `+63${number.slice(1)}`;
+        }
+        
+        const token = import.meta.env.VITE_SMS_API_TOKEN;
 
         const senderId = "PhilSMS";
         const recipient = number; // Get recipient number from selectedProduct
         console.log(number);
-        const message = `${truncateName(userData.name)} is interested in your ${item}`;
-        const token = import.meta.env.VITE_SMS_API_TOKEN;
-
+        const message = `${truncateName(userData.name)} is interested in your ${item}. Please send them an email ${userData.email}`;
+        
         const sendData = {
             sender_id: senderId,
             recipient: recipient,
@@ -64,34 +69,18 @@ const Home = () => {
         const parameters = JSON.stringify(sendData);
         console.log(sendData);
 
-        // const options = {
-        //     hostname: 'app.philsms.com',
-        //     path: '/api/v3/sms/send',
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': `Bearer ${token}`
-        //     }
-        // };
-
-        // const req = https.request(options, res => {
-        //     let data = '';
-
-        //     res.on('data', chunk => {
-        //         data += chunk;
-        //     });
-
-        //     res.on('end', () => {
-        //         console.log(JSON.parse(data));
-        //     });
-        // });
-
-        // req.on('error', error => {
-        //     console.error('Error:', error);
-        // });
-
-        // req.write(parameters);
-        // req.end();
+        axios.post('https://app.philsms.com/api/v3/sms/send', sendData, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     };
     
 
@@ -137,7 +126,6 @@ const Home = () => {
                         <p>Price: ₱{selectedProduct.price}</p>
                         <p>Description: {selectedProduct.description}</p>
                         <p>Seller: {selectedProduct.createdBy}</p>
-                        <p>Number: {selectedProduct.createdByNumber}</p>
                         <img src={selectedProduct.image} alt="Product" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
 
                     </>
