@@ -145,14 +145,6 @@ exports.getProductByUser = async (req, res, next) => {
 
         const products = await Product.find({ createdBy });
 
-        if (products.length === 0) {
-            return res.status(404).json({
-                status: 'error',
-                message: 'No products found for this user',
-                products: [],
-            });
-        }
-
         res.status(200).json({
             status: 'success',
             message: 'Products fetched successfully',
