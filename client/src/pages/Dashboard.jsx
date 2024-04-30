@@ -23,6 +23,7 @@ const Dashboard = () => {
 
   useEffect (() => {
     fetchProductsByUser(userData.name);
+    fetchProductsByUser(userData.name);
   }, [])
 
 
@@ -74,12 +75,14 @@ const Dashboard = () => {
       const imageUrl = await uploadImage('image');
       if (imageUrl) {
         form.validateFields().then((values) => {
-          const productData = { ...values, createdBy: userData.name, createdByEmail: userData.email, image: imageUrl };
+          const productData = { ...values, createdBy: userData.name, createdByEmail: userData.email, createdByNumber: userData.number, image: imageUrl };
           handleProduct(productData);
           form.resetFields();
           setImg(null);
           setOpen(false);
           fetchProductsByUser(userData.name);
+          fetchProductsByUser(userData.name);
+          fetchProductsByUser(userData.name); //para sure haha
         });
       } else {
         message.error('Failed to upload image to Cloudinary.');

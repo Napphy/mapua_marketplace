@@ -112,6 +112,7 @@ exports.upload = async (req, res, next) => {
                     description: newUpload.description,
                     createdBy: newUpload.createdBy,
                     createdByEmail: newUpload.createdByEmail,
+                    createdByNumber: newUpload.createdByNumber,
                     image: newUpload.image,
                 },
             });
