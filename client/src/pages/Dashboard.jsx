@@ -117,7 +117,7 @@ const Dashboard = () => {
         key: 'item',
     },
     {
-        title: 'Price',
+        title: 'Price in Peso',
         dataIndex: 'price',
         key: 'price',
     },

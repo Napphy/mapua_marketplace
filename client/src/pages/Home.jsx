@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Space, Modal } from 'antd';
+import { Button, Card, Space, Modal, message } from 'antd';
 import getProduct from '../hooks/getProduct';
 import NavBar from './components/Navbar';
 import { useAuth } from '../contexts/AuthContext';
@@ -8,7 +8,6 @@ import axios from 'axios';
 const Home = () => {
     const { userData } = useAuth();
     const { fetchAllProducts, allProducts } = getProduct();
-
 
     useEffect(() => {
         fetchAllProducts();
@@ -46,9 +45,7 @@ const Home = () => {
     };
 
     const handleSendNotif = (item, number) => {
-        // const mailtoUrl = `mailto:${email}`;
-        // window.open(mailtoUrl, '_blank');
-
+        
         if (number.startsWith('0')) {
             // Replace '0' with '+639'
             number = `+63${number.slice(1)}`;
@@ -58,17 +55,14 @@ const Home = () => {
 
         const senderId = "PhilSMS";
         const recipient = number; // Get recipient number from selectedProduct
-        console.log(number);
-        const message = `${truncateName(userData.name)} is interested in your ${item}. Please send them an email ${userData.email}`;
+        const messageToSend = `${truncateName(userData.name)} is interested in your ${item}. Please send them an email ${userData.email}`;
         
         const sendData = {
             sender_id: senderId,
             recipient: recipient,
-            message: message,
+            message: messageToSend,
         };
         const parameters = JSON.stringify(sendData);
-        console.log(sendData);
-
         axios.post('https://app.philsms.com/api/v3/sms/send', sendData, {
             headers: {
                 'Content-Type': 'application/json',
@@ -77,10 +71,14 @@ const Home = () => {
         })
         .then(response => {
             console.log(response.data);
+            message.success('SMS notification sent successfully.');
         })
         .catch(error => {
             console.error('Error:', error);
+            message.error('SMS notification was not sent');
         });
+        setModalVisible(false);
+        
     };
     
 
@@ -107,13 +105,12 @@ const Home = () => {
                     ))}
                 </Space>
             </Space>
-
             <Modal 
                 title="Interested?"
                 open={modalVisible} 
                 footer={[
                     <Button key="sendEmail" type="primary" onClick={() => handleSendNotif(selectedProduct.item, selectedProduct.createdByNumber)}>
-                        Send Notification to the Seller
+                        Send SMS Notification to the Seller
                     </Button>,
                     <Button key="cancel" onClick={handleCancel}>
                         Cancel
