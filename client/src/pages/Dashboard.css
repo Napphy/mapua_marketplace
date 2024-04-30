@@ -1,0 +1,9 @@
+.full-width-container {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+}
+
+.full-width-card {
+    width: 100%;
+}

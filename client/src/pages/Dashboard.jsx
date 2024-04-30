@@ -6,6 +6,8 @@ import useProduct from '../hooks/useProduct';
 import axios from 'axios';
 import getProduct from '../hooks/getProduct';
 import useActions from '../hooks/useActions';
+import NavBar from './components/Navbar';
+import './Dashboard.css'
 
 
 const Dashboard = () => {
@@ -72,12 +74,12 @@ const Dashboard = () => {
       const imageUrl = await uploadImage('image');
       if (imageUrl) {
         form.validateFields().then((values) => {
-          const productData = { ...values, createdBy: userData.name, image: imageUrl };
+          const productData = { ...values, createdBy: userData.name, createdByEmail: userData.email, image: imageUrl };
           handleProduct(productData);
           form.resetFields();
           setImg(null);
           setOpen(false);
-          fetchUserProducts(userData.name);
+          fetchProductsByUser(userData.name);
         });
       } else {
         message.error('Failed to upload image to Cloudinary.');
@@ -94,27 +96,10 @@ const Dashboard = () => {
     setOpen(false);
   };
 
-  const fetchUserProducts = async (userName) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetchProductsByUser(userName);
-      console.log('API Response:', response); // Log the response for debugging
-      if (!response || !response.data || !response.data.products) {
-        throw new Error('Invalid response structure');
-      }
-    } catch (error) {
-      setError('Error fetching products');
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  
 
     const refreshItems = async (name) => {
       try {
-        fetchUserProducts(userData.name);
+        fetchProductsByUser(userData.name);
         console.log('refresh');
       }catch(error){
         console.error(error);
@@ -160,7 +145,7 @@ const handleDelete = async (record) => {
   try {
     const { _id } = record;
     const success = await deleteItem(_id); 
-    fetchUserProducts(userData.name); 
+    fetchProductsByUser(userData.name); 
   }catch(error){
     message(error);
   }
@@ -168,31 +153,32 @@ const handleDelete = async (record) => {
 
 
   return (
-
     <>
-      <Card>
-        <Flex vertical gap='small' align='center'>
-          <Avatar size={150} icon={<UserOutlined />} className='avatar' />
-          <Typography.Title level={2} strong className='username'>
-            {userData.name}
-          </Typography.Title>
-          <Button onClick={handleLogout}>Logout</Button>
-        </Flex>
-      </Card>
-
-      <Flex gap='small' align='center' style={{ marginTop: '20px' }}>
+      <NavBar />
+      <Flex vertical gap='small' align='center'>
         <Card>
-          <Typography.Title level={3}>Your Uploaded Products</Typography.Title>
-          <Button type="primary" onClick={showModal}  style={{ marginLeft: 'auto' }}>
-          Add an item to sell!
-        </Button>
-        <Button type="primary" onClick={refreshItems}  style={{ marginLeft: 'auto' }}>
-          Refresh
-        </Button>
-        <Table dataSource={products} columns={columns} pagination={{ pageSize: 5 }} />
+          <Flex horizontal gap='small' align='center' >
+            <Avatar size={150} icon={<UserOutlined />} className='avatar' />
+            <Typography.Title level={2} strong className='username'>
+              {userData.name}
+            </Typography.Title>
+            <Button onClick={handleLogout}>Logout</Button>
+          </Flex>
         </Card>
-      </Flex>
-
+        <div className='full-width-container'>
+          <Card className='full-width-card'>
+            <Typography.Title level={3}>Your Uploaded Products</Typography.Title>
+            <Button type="primary" onClick={showModal}  style={{ marginLeft: 'auto' }}>
+              Add an item to sell!
+            </Button>
+            <br></br>
+            <Button type="primary" onClick={refreshItems}  style={{ marginRight: '10px' }}>
+              Refresh
+            </Button>
+          <Table dataSource={products} columns={columns} pagination={{ pageSize: 5 }} />
+          </Card>
+        </div>
+        </Flex>
       <Modal
         open={open}
         title="Fill information here!"
@@ -220,9 +206,15 @@ const handleDelete = async (record) => {
                 </Form.Item>
                 <Form.Item label="Item Price" name="price" rules={[{
                     required: true,
-                    message: 'Please enter item price here!',
-                }]}>
-                  <Input placeholder='Enter item price here' />
+                    message: 'Please enter item price here!',    
+                },    
+                {
+                  type: 'number',
+                  min: 0,
+                  message: 'Price must be a real number!',
+                },
+                ]}>
+                  <InputNumber placeholder='Enter item price here' />
                 </Form.Item>
                 <Form.Item label="Item Description" name="description" rules={[{
                     required: true,

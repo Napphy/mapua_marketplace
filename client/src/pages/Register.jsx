@@ -20,12 +20,14 @@ const Register = () => {
 
 
   return (
+    <div>
+                <img
+                        className='background-image'
+                        src="https://storage.googleapis.com/bukas-website-v3-prd/website_v3/images/Mapua_facade_3.original.jpg"
+                        alt="Background"
+                    />
     <Card className='form-container'>
-            <div className='video-container'>
-                <video className='background-video' autoPlay muted loop>
-                    <source src="https://mapua.sgp1.cdn.digitaloceanspaces.com/cms_images/IsoCwpmyzkQVgKZgyN96pIL7I9VpEXj1n8EO5Iew.mp4" type="video/mp4" />
-                </video>
-            </div>
+
         <Flex>
             {/* Form */}
             <Flex vertical flex={1}>
@@ -101,7 +103,8 @@ const Register = () => {
                 </Form>
             </Flex>
         </Flex>
-    </Card>         
+    </Card>     
+    </div>    
   )
 }
 

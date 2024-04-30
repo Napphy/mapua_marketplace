@@ -17,6 +17,10 @@ const productSchema = new mongoose.Schema({
     createdBy: {
         type: String,
         required: true,
+    }, 
+    createdByEmail: {
+        type: String,
+        required: true,
     },
     image: {
         type: String,
