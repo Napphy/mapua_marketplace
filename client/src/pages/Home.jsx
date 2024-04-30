@@ -54,7 +54,7 @@ const Home = () => {
         const token = import.meta.env.VITE_SMS_API_TOKEN;
 
         const senderId = "PhilSMS";
-        const recipient = number; // Get recipient number from selectedProduct
+        const recipient = number;
         const messageToSend = `${truncateName(userData.name)} is interested in your ${item}. Please send them an email ${userData.email}`;
         
         const sendData = {
@@ -69,8 +69,7 @@ const Home = () => {
                 'Authorization': `Bearer ${token}`
             }
         })
-        .then(response => {
-            console.log(response.data);
+        .then(() => {
             message.success('SMS notification sent successfully.');
         })
         .catch(error => {
@@ -78,7 +77,6 @@ const Home = () => {
             message.error('SMS notification was not sent');
         });
         setModalVisible(false);
-        
     };
     
 

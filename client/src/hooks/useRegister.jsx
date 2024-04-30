@@ -7,17 +7,29 @@ const useRegister = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    const validatePhoneNumber = (number) => {
+        let formattedNumber = number;
+        if (formattedNumber.startsWith('0')) {
+            // Replace '0' with '+63'
+            formattedNumber = `+63${formattedNumber.slice(1)}`;
+        }
+        return formattedNumber;
+    };
+
     const registerUser = async (values) => {
         try {
             setError(null);
             setLoading(true);
+
+            // Format the phone number before registering
+            values.number = validatePhoneNumber(values.number);
 
             const res = await fetch('https://marketplace-3ph4.onrender.com/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify(values),
             });
 
             const data = await res.json();

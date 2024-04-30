@@ -18,7 +18,7 @@ const Register = () => {
         return Promise.resolve();
     };
 
-
+    
   return (
     <div>
                 <img
@@ -64,7 +64,8 @@ const Register = () => {
                     <Form.Item label="Phone Number" name="number" rules={[{
                         required: true,
                         message: 'Please enter your phone number here!',
-                    }]}>
+                    }
+                    ]}>
                         <Input placeholder='Enter your phone number here' />
                     </Form.Item>
 
