@@ -60,7 +60,7 @@ const Dashboard = () => {
     data.append("upload_preset", type === 'image' ? 'marketplace_preset' : 'marketplace_preset');
 
     try {
-      const CLOUD_NAME =  import.meta.env.VITE_CLOUD_NAME;
+      const CLOUD_NAME =  import.meta.env.VITE_CLOUD_NAME || process.env.VITE_CLOUD_NAME;
       let resourceType = type === 'image' ? 'image' : 'video';
       let api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`;
 
