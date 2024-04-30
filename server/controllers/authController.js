@@ -63,6 +63,7 @@ exports.login = async (req, res, next) => {
         const user = await User.findOne({ email });
 
         if(!user) return next(new createError('User not found! Please Sign up!', 404));
+
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if(!isPasswordValid){
@@ -110,6 +111,7 @@ exports.upload = async (req, res, next) => {
                     price: newUpload.price,
                     description: newUpload.description,
                     createdBy: newUpload.createdBy,
+                    createdByEmail: newUpload.createdByEmail,
                     image: newUpload.image,
                 },
             });
