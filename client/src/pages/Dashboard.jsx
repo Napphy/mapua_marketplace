@@ -304,6 +304,7 @@ const handleDelete = async (record) => {
                 {/* Item pic here */}
                 <Form.Item label="Item Image">
                   <input 
+                    required
                     type='file'
                     accept='image/*'
                     id='img'
