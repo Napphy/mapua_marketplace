@@ -123,9 +123,9 @@ const Dashboard = () => {
 
   const handleEditItem = async (values) => {
     try {
-      const { item, price, description, image } = values; 
-      const dataToUpdate = { item, price, description, image }; 
-      const success = await editItem(currentItem._id, dataToUpdate); 
+      const { item, price, description, image } = values;
+      const dataToUpdate = { item, price, description, image };
+      const success = await editItem(currentItem._id, dataToUpdate);
       if (success) {
         message.success('Item edited successfully');
         setEditModalVisible(false);

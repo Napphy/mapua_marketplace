@@ -70,7 +70,7 @@ const Home = () => {
             }
         })
         .then(() => {
-            message.success('SMS notification sent successfully.');
+            message.success('SMS notification sent successfully. Please wait for an email from the seller.');
         })
         .catch(error => {
             console.error('Error:', error);

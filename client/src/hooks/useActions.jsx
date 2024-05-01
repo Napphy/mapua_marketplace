@@ -37,11 +37,11 @@ const useActions = () => {
                 },
                 body: JSON.stringify(newData),
             });
-
+    
             if (!res.ok) {
                 throw new Error('Failed to edit item');
             }
-
+    
             setLoading(false);
             return true;
         } catch (error) {
@@ -51,6 +51,7 @@ const useActions = () => {
             return false;
         }
     };
+    
 
     return { loading, error, deleteItem, editItem };
 };
