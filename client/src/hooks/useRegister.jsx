@@ -21,8 +21,8 @@ const useRegister = () => {
             setError(null);
             setLoading(true);
 
-            // Format the phone number before registering
-            values.number = validatePhoneNumber(values.number);
+            // // Format the phone number before registering
+            // values.number = validatePhoneNumber(values.number);
 
             const res = await fetch('https://marketplace-3ph4.onrender.com/signup', {
                 method: 'POST',
