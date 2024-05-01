@@ -113,32 +113,63 @@ const Dashboard = () => {
     }
 
 
-  const handleEdit = (productId) => {
-    const itemToEdit = products.find((item) => item._id === productId);
+    const handleEdit = (productId) => {
+      const itemToEdit = products.find((item) => item._id === productId);
       if (itemToEdit) {
-          setCurrentItem(itemToEdit);
-          setEditModalVisible(true);
+        setCurrentItem(itemToEdit);
+        fetchProductsByUser(userData.name); 
+        editForm.resetFields(); 
+        setEditModalVisible(true);
       }
-  };
+    };
 
-  const handleEditItem = async (values) => {
+  const handleEditItem = async () => {
+    fetchProductsByUser(userData.name);
     try {
-      const { item, price, description, image } = values;
-      const dataToUpdate = { item, price, description, image };
-      const success = await editItem(currentItem._id, dataToUpdate);
-      if (success) {
-        message.success('Item edited successfully');
-        setEditModalVisible(false);
-        fetchProductsByUser(userData.name);
-        editForm.resetFields();
-      } else {
-        message.error('Failed to edit item');
-      }
+      editForm.validateFields().then((values) => {
+        const { editedItem, editedPrice, editedDescription } = values;
+        let dataToUpdate = { item: editedItem, price: editedPrice, description: editedDescription };
+  
+        if (img) {
+          uploadImage('image').then((imageUrl) => {
+            if (imageUrl) {
+              dataToUpdate = { ...dataToUpdate, image: imageUrl };
+              editItem(currentItem._id, dataToUpdate).then((success) => {
+                if (success) {
+                  message.success('Item edited successfully');
+                  setEditModalVisible(false);
+                  editForm.resetFields();
+                  fetchProductsByUser(userData.name);
+                } else {
+                  message.error('Failed to edit item');
+                }
+              });
+            } else {
+              message.error('Failed to upload image to Cloudinary.');
+            }
+          });
+        } else {
+          console.log('Data to update:', dataToUpdate);
+  
+          editItem(currentItem._id, dataToUpdate).then((success) => {
+            if (success) {
+              message.success('Item edited successfully');
+              setEditModalVisible(false);
+              editForm.resetFields();
+              fetchProductsByUser(userData.name);
+            } else {
+              message.error('Failed to edit item');
+            }
+          });
+        }
+      });
     } catch (error) {
       console.error('Error editing item:', error);
       message.error('Failed to edit item');
     }
   };
+
+
   
   
 
@@ -223,8 +254,6 @@ const handleDelete = async (record) => {
       <Modal
         open={open}
         title="Fill information here!"
-        onOk={handleOk}
-        onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>
             Cancel
@@ -283,45 +312,41 @@ const handleDelete = async (record) => {
               </Form.Item>
         </Form>
       </Modal>
-            <Modal
-                title="Edit Item"
-                open={editModalVisible}
-                onCancel={editModalCancel}
-                footer={[
-                  <Button key="back" onClick={editModalCancel}>
-                    Cancel
-                  </Button>,
-                  <Button key="submit" type="primary" onClick={handleEditItem}>
-                    Submit
-                  </Button>,
-                ]}
-            >
-                <Form
-                    form={editForm}
-                    layout="vertical"
-                >
-                    <Form.Item label="Item Name" name="item" initialValue={currentItem?.item}>
-                        <Input placeholder="Enter item name" />
-                    </Form.Item>
-                    <Form.Item label="Price" name="price" initialValue={currentItem?.price}>
-                        <InputNumber placeholder="Enter price" />
-                    </Form.Item>
-                    <Form.Item label="Description" name="description" initialValue={currentItem?.description}>
-                        <Input.TextArea placeholder="Enter description" />
-                    </Form.Item>
-                    <Form.Item label="Description" name="image">
-                        <input 
-                        type='file'
-                        accept='image/*'
-                        id='img'
-                        onChange={(e) => setImg((prev) => e.target.files[0])}
-                        />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">Submit</Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+          <Modal
+            title="Edit Item"
+            open={editModalVisible}
+            onCancel={editModalCancel}
+            footer={[
+              <Button key="back" onClick={editModalCancel}>
+                Cancel
+              </Button>,
+              <Button key="submit" type="primary" onClick={handleEditItem}>
+                Submit
+              </Button>,
+            ]}
+          >
+            <Form 
+            form={editForm} 
+            layout="vertical">
+              <Form.Item label="Item Name" name="editedItem" initialValue={currentItem?.item}>
+              <Input placeholder="Enter item name" />
+              </Form.Item>
+              <Form.Item label="Price" name="editedPrice" initialValue={currentItem?.price}>
+                <InputNumber placeholder="Enter price" />
+              </Form.Item>
+              <Form.Item label="Description" name="editedDescription" initialValue={currentItem?.description}>
+                <Input.TextArea placeholder="Enter description" />
+              </Form.Item>
+              <Form.Item label="Image" name="image">
+                <input
+                  type='file'
+                  accept='image/*'
+                  id='img'
+                  onChange={(e) => setImg((prev) => e.target.files[0])}
+                />
+              </Form.Item>
+            </Form>
+          </Modal>
     </>
   
   )

@@ -184,7 +184,6 @@ exports.deleteItem = async (req, res, next) => {
 
 exports.editItem = async (req, res, next) => {
     try {
-        // const { productId } = req.params.product;
         const productId = req.params.productId;
 
         const existingProduct = await Product.findById(productId);
