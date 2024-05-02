@@ -88,7 +88,7 @@ const Home = () => {
     return (
         <>
             <NavBar />
-            <Space direction="vertical" style={{ margin: '20px' }}>
+            <Space direction="vertical" style={{ paddingTop: '64px' , margin: '20px' }}>
                 <Button type="primary" onClick={refreshItems}>
                     Refresh
                 </Button>
@@ -103,7 +103,7 @@ const Home = () => {
                             <p>Price: ₱{product.price}</p>
                             <p>Description: {product.description}</p>
                             <p>Seller: {truncateName(product.createdBy)}</p>
-                            <img src={product.image} alt="Product" style={{ width: '100%', height: 400, objectFit: 'cover' }} />
+                            <img src={product.image} alt="Product" style={{ width: '100%', maxHeight: '350px', objectFit: 'contain' }} />
                         </Card>
                     ))}
                 </Space>

@@ -226,8 +226,13 @@ const handleDelete = async (record) => {
 
   return (
     <>
-      <NavBar />
-      <Flex vertical gap='small' align='center'>
+
+
+      <div className='navbar-container'>
+        <NavBar />  
+      </div>
+
+      <Flex vertical gap='small' align='left'>
         <Card>
           <Flex horizontal gap='small' align='center' >
             <Avatar size={150} icon={<UserOutlined />} className='avatar' />
@@ -240,11 +245,11 @@ const handleDelete = async (record) => {
         <div className='full-width-container'>
           <Card className='full-width-card'>
             <Typography.Title level={3}>Your Uploaded Products</Typography.Title>
-            <Button type="primary" onClick={showModal}  style={{ marginLeft: 'auto' }}>
+            <Button type="primary" onClick={showModal}>
               Add an item to sell!
             </Button>
             <br></br>
-            <Button type="primary" onClick={refreshItems}  style={{ marginRight: '10px' }}>
+            <Button type="primary" onClick={refreshItems}>
               Refresh
             </Button>
           <Table dataSource={products} columns={columns} pagination={{ pageSize: 5 }} />
@@ -315,6 +320,7 @@ const handleDelete = async (record) => {
                     />
                 </Form.Item>
         </Form>
+
       </Modal>
           <Modal
             title="Edit Item"

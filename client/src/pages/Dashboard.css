@@ -1,7 +1,7 @@
 .full-width-container {
-    width: 100%;
-    padding: 20px;
+    margin-top: 200px;
     display: flex;
+    justify-content: flex-start; /* Align content to the left */
 }
 
 .full-width-card {
