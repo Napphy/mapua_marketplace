@@ -64,12 +64,12 @@ const Home = () => {
         };
 
         try {
-            // const response = await axios.post('https://app.philsms.com/api/v3/sms/send', sendData, {
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'Authorization': `Bearer ${token}`
-            //     }
-            // });
+            const response = await axios.post('https://app.philsms.com/api/v3/sms/send', sendData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             setCanSendSMS(false);
             message.success('SMS notification sent successfully. Please wait for an email from the seller.');
             message.warning('Please wait 1 minute before sending another SMS Notification. This is to prevent spams.');
