@@ -292,7 +292,7 @@ const handleDelete = async (record) => {
                 }]}>
                       <TextArea
                         showCount
-                        maxLength={100}
+                        maxLength={500}
                         placeholder="Please add item description here!"
                         style={{
                           height: 120,
@@ -302,15 +302,18 @@ const handleDelete = async (record) => {
                 </Form.Item>
 
                 {/* Item pic here */}
-                <Form.Item label="Item Image">
-                  <input 
-                    required
-                    type='file'
-                    accept='image/*'
-                    id='img'
-                    onChange={(e) => setImg((prev) => e.target.files[0])}
-                  />
-              </Form.Item>
+                <Form.Item label="Item Image" name="image" rules={[{
+                    required: true,
+                    message: 'Please select an item image!',
+                }]}>
+                    <input 
+                        required
+                        type='file'
+                        accept='image/*'
+                        id='img'
+                        onChange={(e) => setImg(e.target.files[0])}
+                    />
+                </Form.Item>
         </Form>
       </Modal>
           <Modal

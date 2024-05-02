@@ -18,6 +18,14 @@ const Register = () => {
         return Promise.resolve();
     };
 
+        // Custom phone number validation rule
+    const validatePhoneNumber = (_, value) => {
+       if (!value || !value.startsWith('09') || value.length !== 11) {
+           return Promise.reject('Please enter a valid phone number starting with 09 and 11 digits long.');
+            }
+       return Promise.resolve();
+    };
+
     
   return (
     <div>
@@ -64,6 +72,9 @@ const Register = () => {
                     <Form.Item label="Phone Number" name="number" rules={[{
                         required: true,
                         message: 'Please enter your phone number here!',
+                    },
+                    {
+                        validator: validatePhoneNumber, 
                     }
                     ]}>
                         <Input placeholder='Enter your phone number here' />

@@ -33,8 +33,8 @@ const Home = () => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [canSendSMS, setCanSendSMS] = useState(true);
 
-    
     const handleCancel = () => {
         setModalVisible(false);
     };    
@@ -44,8 +44,8 @@ const Home = () => {
         setModalVisible(true);
     };
 
-    const handleSendNotif = (item, number) => {
-        
+    const debouncedSendNotif = async (item, number) => {
+
         if (number.startsWith('0')) {
             // Replace '0' with '+639'
             number = `+63${number.slice(1)}`;
@@ -62,23 +62,28 @@ const Home = () => {
             recipient: recipient,
             message: messageToSend,
         };
-        const parameters = JSON.stringify(sendData);
-        axios.post('https://app.philsms.com/api/v3/sms/send', sendData, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(() => {
+
+        try {
+            // const response = await axios.post('https://app.philsms.com/api/v3/sms/send', sendData, {
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Authorization': `Bearer ${token}`
+            //     }
+            // });
+            setCanSendSMS(false);
             message.success('SMS notification sent successfully. Please wait for an email from the seller.');
-        })
-        .catch(error => {
+            message.warning('Please wait 1 minute before sending another SMS Notification. This is to prevent spams.');
+        } catch (error) {
             console.error('Error:', error);
             message.error('SMS notification was not sent');
-        });
+        }
+
         setModalVisible(false);
+
+        setTimeout(() => {
+            setCanSendSMS(true);
+        }, 60000);
     };
-    
 
     return (
         <>
@@ -107,7 +112,7 @@ const Home = () => {
                 title="Interested?"
                 open={modalVisible} 
                 footer={[
-                    <Button key="sendEmail" type="primary" onClick={() => handleSendNotif(selectedProduct.item, selectedProduct.createdByNumber)}>
+                    <Button key="sendEmail" type="primary" onClick={() => debouncedSendNotif(selectedProduct.item, selectedProduct.createdByNumber)} disabled={!canSendSMS}>
                         Send SMS Notification to the Seller
                     </Button>,
                     <Button key="cancel" onClick={handleCancel}>
@@ -120,13 +125,10 @@ const Home = () => {
                         <p>Item: {selectedProduct.item}</p>
                         <p>Price: ₱{selectedProduct.price}</p>
                         <p>Description: {selectedProduct.description}</p>
-                        <p>Seller: {selectedProduct.createdBy}</p>
+                        <p>Seller: {truncateName(selectedProduct.createdBy)}</p>
                         <img src={selectedProduct.image} alt="Product" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-
                     </>
                 )}
-
-
             </Modal>
         </>
     );
