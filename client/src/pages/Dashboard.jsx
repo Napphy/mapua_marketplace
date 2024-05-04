@@ -223,38 +223,55 @@ const handleDelete = async (record) => {
   }
 };
 
+useEffect(() => {
+  // Disable scroll when dashboard component mounts
+  document.body.classList.add('disable-scroll');
+
+  // Re-enable scroll when dashboard component unmounts
+  return () => {
+      document.body.classList.remove('disable-scroll');
+  };
+}, []);
+
 
   return (
     <>
-    <div className='dashboard-container'>
-      <div className='navbar-container'>
-        <NavBar />  
-      </div>
-      <div className='dashboard-content'>
-        <Flex vertical gap='small' align='left'>
-          <Card>
-            <Flex horizontal gap='large' align='center' >
-              <Avatar size={150} icon={<UserOutlined />} className='avatar' />
-              <Typography.Title level={2} strong className='username'>
-                {userData.name}
-              </Typography.Title>
-              <Button onClick={handleLogout}>Logout</Button>
-            </Flex>
-          </Card>
-          <div className='full-width-container'>
-            <Card className='full-width-card'>
-              <Typography.Title level={3}>Your Uploaded Products</Typography.Title>
-              <Button type="primary" onClick={showModal}>
-                Add an item to sell!
-              </Button>
-              <br></br>
-              <Button type="primary" onClick={refreshItems}>
-                Refresh
-              </Button>
-            <Table dataSource={products} columns={columns} pagination={{ pageSize: 5 }} />
+      <div className='dashboard-container'>
+      <div className='disable-scroll'>
+        <img
+            className='background-image'
+            src="https://storage.googleapis.com/bukas-website-v3-prd/website_v3/images/Mapua_facade_3.original.jpg"
+            alt="Background"
+         />
+        <div className='navbar-container'>
+          <NavBar />  
+        </div>
+        <div className='dashboard-content'>
+          <Flex vertical gap='small' align='left'>
+            <Card>
+              <Flex horizontal gap='large' align='center' >
+                <Avatar size={150} icon={<UserOutlined />} className='avatar' />
+                <Typography.Title level={2} strong className='username'>
+                  {userData.name}
+                </Typography.Title>
+                <Button onClick={handleLogout}>Logout</Button>
+              </Flex>
             </Card>
-          </div>
-        </Flex>
+            <div className='full-width-container'>
+              <Card className='full-width-card'>
+                <Typography.Title level={3}>Your Uploaded Products</Typography.Title>
+                <Button type="primary" onClick={showModal}>
+                  Add an item to sell!
+                </Button>
+                <br></br>
+                <Button type="primary" onClick={refreshItems}>
+                  Refresh
+                </Button>
+              <Table dataSource={products} columns={columns} pagination={{ pageSize: 5 }} />
+              </Card>
+            </div>
+          </Flex>
+        </div>
       </div>
     </div>
       <Modal
