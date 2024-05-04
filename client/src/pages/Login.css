@@ -1,7 +1,7 @@
 .background-container {
     position: relative;
     width: 100%;
-    height: 100vh;
+    height: 80vh;
     overflow: hidden;
 }
 
@@ -18,4 +18,8 @@
     
 }
 
+/* Add this CSS rule to disable scroll wheel */
+body {
+    overflow: hidden;
+}
 

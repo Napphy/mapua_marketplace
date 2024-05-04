@@ -233,7 +233,7 @@ const handleDelete = async (record) => {
       <div className='dashboard-content'>
         <Flex vertical gap='small' align='left'>
           <Card>
-            <Flex horizontal gap='small' align='center' >
+            <Flex horizontal gap='large' align='center' >
               <Avatar size={150} icon={<UserOutlined />} className='avatar' />
               <Typography.Title level={2} strong className='username'>
                 {userData.name}
