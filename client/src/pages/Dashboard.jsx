@@ -1,5 +1,5 @@
 import { Avatar, Button, Card, Typography, Flex, Space, Modal, Form, Input, InputNumber, Upload, message, Table  } from 'antd';
-import React, { useState, useEffect } from 'react'; // Import useState from React
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { UserOutlined } from '@ant-design/icons';
 import useProduct from '../hooks/useProduct';
@@ -60,7 +60,7 @@ const Dashboard = () => {
     data.append("upload_preset", type === 'image' ? 'marketplace_preset' : 'marketplace_preset');
 
     try {
-      const CLOUD_NAME =  import.meta.env.VITE_CLOUD_NAME || process.env.VITE_CLOUD_NAME;
+      const CLOUD_NAME =  import.meta.env.VITE_CLOUD_NAME || process.env.VITE_CLOUD_NAME; //ma-arte si vercel import.meta.env dont work on it need nung process.env
       let resourceType = type === 'image' ? 'image' : 'video';
       let api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`;
 
@@ -85,7 +85,7 @@ const Dashboard = () => {
           setOpen(false);
           fetchProductsByUser(userData.name);
           fetchProductsByUser(userData.name);
-          fetchProductsByUser(userData.name); //para sure haha
+          fetchProductsByUser(userData.name); //para sure since may delay yung pagupdate sa backend tas sa frontend haha
         });
       } else {
         message.error('Failed to upload image to Cloudinary.');
@@ -226,36 +226,37 @@ const handleDelete = async (record) => {
 
   return (
     <>
-
-
+    <div className='dashboard-container'>
       <div className='navbar-container'>
         <NavBar />  
       </div>
-
-      <Flex vertical gap='small' align='left'>
-        <Card>
-          <Flex horizontal gap='small' align='center' >
-            <Avatar size={150} icon={<UserOutlined />} className='avatar' />
-            <Typography.Title level={2} strong className='username'>
-              {userData.name}
-            </Typography.Title>
-            <Button onClick={handleLogout}>Logout</Button>
-          </Flex>
-        </Card>
-        <div className='full-width-container'>
-          <Card className='full-width-card'>
-            <Typography.Title level={3}>Your Uploaded Products</Typography.Title>
-            <Button type="primary" onClick={showModal}>
-              Add an item to sell!
-            </Button>
-            <br></br>
-            <Button type="primary" onClick={refreshItems}>
-              Refresh
-            </Button>
-          <Table dataSource={products} columns={columns} pagination={{ pageSize: 5 }} />
+      <div className='dashboard-content'>
+        <Flex vertical gap='small' align='left'>
+          <Card>
+            <Flex horizontal gap='small' align='center' >
+              <Avatar size={150} icon={<UserOutlined />} className='avatar' />
+              <Typography.Title level={2} strong className='username'>
+                {userData.name}
+              </Typography.Title>
+              <Button onClick={handleLogout}>Logout</Button>
+            </Flex>
           </Card>
-        </div>
+          <div className='full-width-container'>
+            <Card className='full-width-card'>
+              <Typography.Title level={3}>Your Uploaded Products</Typography.Title>
+              <Button type="primary" onClick={showModal}>
+                Add an item to sell!
+              </Button>
+              <br></br>
+              <Button type="primary" onClick={refreshItems}>
+                Refresh
+              </Button>
+            <Table dataSource={products} columns={columns} pagination={{ pageSize: 5 }} />
+            </Card>
+          </div>
         </Flex>
+      </div>
+    </div>
       <Modal
         open={open}
         title="Fill information here!"

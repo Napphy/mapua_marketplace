@@ -1,9 +1,14 @@
-.full-width-container {
-    margin-top: 200px;
+.dashboard-container {
     display: flex;
-    justify-content: flex-start; /* Align content to the left */
+    flex-direction: column;
+    width: 100vw; /* Set the container's width to 100% of the viewport width */
+    height: 100vh; /* Set the container's height to 100% of the viewport height */
 }
 
-.full-width-card {
-    width: 100%;
+.dashboard-content {
+    flex-grow: 1; /* Make the content area grow to fill the remaining space */
+    width: 100%; /* Set the content's width to fill the container */
+    max-width: 1200px; /* Set a maximum width for the content */
+    margin: 0 auto; /* Center the content horizontally */
+    padding: 20px; /* Add padding as needed */
 }

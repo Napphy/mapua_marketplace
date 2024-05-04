@@ -1,0 +1,13 @@
+.footer {
+    background-color: #001529; 
+    color: #fff;
+    padding: 20px;
+  }
+  
+  .donate-banner {
+    font-size: 20px;
+    overflow-x: auto; 
+    white-space: nowrap;
+    width: 100%; 
+  }
+  

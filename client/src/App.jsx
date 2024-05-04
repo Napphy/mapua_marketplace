@@ -12,7 +12,7 @@ const App = () => {
   return (
   <Router>
     <Routes>
-      <Route path='/' element={! isAuthenticated ? <Register /> : <Navigate to ='/dashboard' />}/>
+      <Route path='/' element={!isAuthenticated ? <Register /> : <Navigate to ='/dashboard' />}/>
       <Route path='/login' element={!isAuthenticated ? <Login /> : <Navigate to ='/dashboard' />}/>
       <Route path='/dashboard' element={isAuthenticated ? <Dashboard/>  : <Navigate to ='/login' />}/>
       <Route path='/home' element={isAuthenticated ? <Home /> : <Navigate to = '/login ' /> }/>

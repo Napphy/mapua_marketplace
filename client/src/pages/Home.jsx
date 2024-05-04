@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Space, Modal, message } from 'antd';
 import getProduct from '../hooks/getProduct';
-import NavBar from './components/Navbar';
+import  Footer  from './components/Footer';
+import  NavBar  from './components/Navbar'
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
+import './Home.css';
 
 const Home = () => {
     const { userData } = useAuth();
@@ -88,16 +90,16 @@ const Home = () => {
     return (
         <>
             <NavBar />
-            <Space direction="vertical" style={{ paddingTop: '64px' , margin: '20px' }}>
+            <Space direction="vertical" style={{ paddingTop: '130px' , margin: '20px' }}>
                 <Button type="primary" onClick={refreshItems}>
                     Refresh
                 </Button>
-                <Space wrap>
+                <div className="product-grid">
                     {allProducts.map((product) => (
                         <Card
                             key={product._id} 
                             title={product.item}
-                            style={{ width: 500, height: 600 }}
+                            className="product-card"
                             onClick={() => openModal(product)}
                         >
                             <p>Price: ₱{product.price}</p>
@@ -106,7 +108,7 @@ const Home = () => {
                             <img src={product.image} alt="Product" style={{ width: '100%', maxHeight: '350px', objectFit: 'contain' }} />
                         </Card>
                     ))}
-                </Space>
+                </div>
             </Space>
             <Modal 
                 title="Interested?"
@@ -130,6 +132,7 @@ const Home = () => {
                     </>
                 )}
             </Modal>
+            <Footer />
         </>
     );
 };
