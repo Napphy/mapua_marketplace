@@ -152,7 +152,7 @@ exports.getProductByUser = async (req, res, next) => {
         });
     } catch (error) {
         console.error('Error fetching products:', error);
-        next(error); // Pass the error to the error-handling middleware
+        next(error);
     }
 };
 

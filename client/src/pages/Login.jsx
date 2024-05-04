@@ -6,7 +6,6 @@ import useLogin from '../hooks/useLogin';
 import './Login.css';
 
 const Login = () => {
-    const [isLoginActive, setIsLoginActive] = useState(true);
     const {loading, error, loginUser} = useLogin();
     const handleLogin = async (values) => {
         await loginUser(values);
@@ -20,18 +19,8 @@ const Login = () => {
     };
 
 
-    useEffect(() => {
-        // Disable scroll when login component mounts
-        document.body.classList.add('disable-scroll');
-
-        // Re-enable scroll when login component unmounts
-        return () => {
-            document.body.classList.remove('disable-scroll');
-        };
-    }, []);
-
   return (
-        <div className='disable-scroll'>
+        <div>
                 <img
                         className='background-image'
                         src="https://storage.googleapis.com/bukas-website-v3-prd/website_v3/images/Mapua_facade_3.original.jpg"
@@ -39,8 +28,6 @@ const Login = () => {
                     />
         
         <Card className='form-container'>
-
-
                 <Flex>
                 {/* Form */}
                     <Flex vertical flex={1}>

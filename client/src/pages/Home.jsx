@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Space, Modal, message } from 'antd';
+import { Button, Card, Space, Modal, message, FloatButton  } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons';
 import getProduct from '../hooks/getProduct';
 import  Footer  from './components/Footer';
 import  NavBar  from './components/Navbar'
@@ -91,9 +92,6 @@ const Home = () => {
         <>
             <NavBar />
             <Space direction="vertical" style={{ paddingTop: '130px' , margin: '20px' }}>
-                <Button type="primary" onClick={refreshItems}>
-                    Refresh
-                </Button>
                 <div className="product-grid">
                     {allProducts.map((product) => (
                         <Card
@@ -110,6 +108,13 @@ const Home = () => {
                     ))}
                 </div>
             </Space>
+            <FloatButton 
+            type="primary" 
+            onClick={refreshItems}  
+            icon = {<ReloadOutlined />}
+            />
+                
+            
             <Modal 
                 title="Interested?"
                 open={modalVisible} 

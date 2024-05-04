@@ -7,3 +7,8 @@
 .product-card {
     width: 100%; /* Ensure each card takes up the full width of its column */
 }
+
+body {
+    margin: 0;
+    padding: 0;
+}

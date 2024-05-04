@@ -223,16 +223,6 @@ const handleDelete = async (record) => {
   }
 };
 
-useEffect(() => {
-  // Disable scroll when dashboard component mounts
-  document.body.classList.add('disable-scroll');
-
-  // Re-enable scroll when dashboard component unmounts
-  return () => {
-      document.body.classList.remove('disable-scroll');
-  };
-}, []);
-
 
   return (
     <>
@@ -315,7 +305,7 @@ useEffect(() => {
                 }]}>
                       <TextArea
                         showCount
-                        maxLength={500}
+                        maxLength={200}
                         placeholder="Please add item description here!"
                         style={{
                           height: 120,
