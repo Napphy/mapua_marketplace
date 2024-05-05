@@ -9,12 +9,25 @@ import axios from 'axios';
 import './Home.css';
 
 const Home = () => {
-    const { userData } = useAuth();
+    const { userData, logout } = useAuth();
     const { fetchAllProducts, allProducts } = getProduct();
 
     useEffect(() => {
+
+        const handleBeforeUnload = (e) => {
+            e.preventDefault();
+            logout(); 
+        };
+
         fetchAllProducts();
-    }, []);
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [logout]);
+        
 
     const refreshItems = async () => {
         try {
@@ -118,6 +131,7 @@ const Home = () => {
             <Modal 
                 title="Interested?"
                 open={modalVisible} 
+                onCancel={handleCancel}
                 footer={[
                     <Button key="sendEmail" type="primary" onClick={() => debouncedSendNotif(selectedProduct.item, selectedProduct.createdByNumber)} disabled={!canSendSMS}>
                         Send SMS Notification to the Seller

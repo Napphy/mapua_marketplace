@@ -24,10 +24,12 @@ const Dashboard = () => {
 
   
 
-  useEffect (() => {
-    fetchProductsByUser(userData.name);
-    fetchProductsByUser(userData.name);
-  }, [])
+  useEffect(() => {
+
+    fetchProductsByUser();
+    fetchProductsByUser();
+
+}, []);
 
 
 
