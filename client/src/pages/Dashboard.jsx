@@ -1,7 +1,7 @@
-import { Avatar, Button, Card, Typography, Flex, Space, Modal, Form, Input, InputNumber, Upload, message, Table  } from 'antd';
+import { Avatar, Button, Card, Typography, Flex, Space, Modal, Form, Input, InputNumber, Upload, message, Table, FloatButton  } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, ReloadOutlined } from '@ant-design/icons';
 import useProduct from '../hooks/useProduct';
 import axios from 'axios';
 import getProduct from '../hooks/getProduct';
@@ -253,16 +253,17 @@ const handleDelete = async (record) => {
                 <Button type="primary" onClick={showModal}>
                   Add an item to sell!
                 </Button>
-                <br></br>
-                <Button type="primary" onClick={refreshItems}>
-                  Refresh
-                </Button>
               <Table dataSource={products} columns={columns} pagination={{ pageSize: 5 }} />
               </Card>
             </div>
           </Flex>
         </div>
       </div>
+      <FloatButton 
+            type="primary" 
+            onClick={refreshItems}  
+            icon = {<ReloadOutlined />}
+            />
     </div>
       <Modal
         open={open}
