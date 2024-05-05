@@ -24,12 +24,13 @@ const useProduct = () => {
             if (res.status === 201) {
                 message.success(data.message);
             } else if (res.status === 400) {
-                setError(data.message);
+                message.error(data.message);
             } else {
                 message.error('Product upload failed!');
             }
         } catch (error) {   
-            message.error('Error uploading product', error);
+            message.error(`Error uploading product: ${error}`);
+
         } finally {
             setLoading(false);
         }

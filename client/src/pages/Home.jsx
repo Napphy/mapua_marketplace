@@ -103,6 +103,13 @@ const Home = () => {
 
     return (
         <>
+
+            <img
+            className='background-image'
+            src="https://fs2.mapua.edu.ph/2020QS/Other Evidences/CDMO/Campus Facilities/Cafeteria 3.jpg"
+            alt="Background"
+            />
+
             <NavBar />
             <Space direction="vertical" style={{ paddingTop: '130px' , margin: '20px' }}>
                 <div className="product-grid">

@@ -26,8 +26,8 @@ const Dashboard = () => {
 
   useEffect(() => {
 
-    fetchProductsByUser();
-    fetchProductsByUser();
+    fetchProductsByUser(userData.name);
+    fetchProductsByUser(userData.name);
 
 }, []);
 
@@ -229,7 +229,7 @@ const handleDelete = async (record) => {
   return (
     <>
       <div className='dashboard-container'>
-      <div className='disable-scroll'>
+      <div>
         <img
             className='background-image'
             src="https://storage.googleapis.com/bukas-website-v3-prd/website_v3/images/Mapua_facade_3.original.jpg"
