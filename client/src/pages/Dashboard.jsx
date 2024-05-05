@@ -14,7 +14,7 @@ const Dashboard = () => {
   const { userData, logout } = useAuth();
   const [form] = Form.useForm();
   const { uploadProduct } = useProduct();
-  const { fetchProductsByUser, products } = getProduct();
+  const { fetchProductsByUser, products, fetchUser } = getProduct();
   const { TextArea } = Input;
   const [img, setImg] = useState(null);
   const { deleteItem, editItem, editUser } = useActions();
@@ -29,8 +29,8 @@ const Dashboard = () => {
 
   useEffect(() => {
 
-    fetchProductsByUser(userData.name);
-    fetchProductsByUser(userData.name);
+    fetchProductsByUser(userData._id); 
+    fetchProductsByUser(userData._id); 
 
 }, []);
 
@@ -83,14 +83,14 @@ const Dashboard = () => {
       const imageUrl = await uploadImage('image');
       if (imageUrl) {
         form.validateFields().then((values) => {
-          const productData = { ...values, createdBy: userData.name, createdByEmail: userData.email, createdByNumber: userData.number, image: imageUrl };
+          const productData = { ...values, createdBy: userData.name, createdByEmail: userData.email, createdByNumber: userData.number, image: imageUrl, createdByID: userData._id };
           handleProduct(productData);
           form.resetFields();
           setImg(null);
           setOpen(false);
-          fetchProductsByUser(userData.name);
-          fetchProductsByUser(userData.name);
-          fetchProductsByUser(userData.name); //para sure since may delay yung pagupdate sa backend tas sa frontend haha
+          fetchProductsByUser(userData._id); 
+          fetchProductsByUser(userData._id); 
+          fetchProductsByUser(userData._id);  //para sure since may delay yung pagupdate sa backend tas sa frontend haha
         });
       } else {
         message.error('Failed to upload image to Cloudinary.');
@@ -110,7 +110,7 @@ const Dashboard = () => {
 
     const refreshItems = async (name) => {
       try {
-        fetchProductsByUser(userData.name);
+        fetchProductsByUser(userData._id); 
         console.log('refresh');
       }catch(error){
         console.error(error);
@@ -122,14 +122,14 @@ const Dashboard = () => {
       const itemToEdit = products.find((item) => item._id === productId);
       if (itemToEdit) {
         setCurrentItem(itemToEdit);
-        fetchProductsByUser(userData.name); 
+        fetchProductsByUser(userData._id); 
         editForm.resetFields(); 
         setEditModalVisible(true);
       }
     };
 
   const handleEditItem = async () => {
-    fetchProductsByUser(userData.name);
+    fetchProductsByUser(userData._id); 
     try {
       editForm.validateFields().then((values) => {
         const { editedItem, editedPrice, editedDescription } = values;
@@ -144,7 +144,7 @@ const Dashboard = () => {
                   message.success('Item edited successfully');
                   setEditModalVisible(false);
                   editForm.resetFields();
-                  fetchProductsByUser(userData.name);
+                  fetchProductsByUser(userData._id); 
                 } else {
                   message.error('Failed to edit item');
                 }
@@ -161,7 +161,7 @@ const Dashboard = () => {
               message.success('Item edited successfully');
               setEditModalVisible(false);
               editForm.resetFields();
-              fetchProductsByUser(userData.name);
+              fetchProductsByUser(userData._id); 
             } else {
               message.error('Failed to edit item');
             }
@@ -183,7 +183,7 @@ const handleDelete = async (record) => {
   try {
     const { _id } = record;
     await deleteItem(_id); 
-    fetchProductsByUser(userData.name); 
+    fetchProductsByUser(userData._id); 
   }catch(error){
     message.error(error);
   }
@@ -224,6 +224,8 @@ const handleEditUserInfo = async () => {
               message.success('User edited successfully');
               setEditModalVisible(false);
               editUserForm.resetFields();
+              fetchUser(userData._id);
+              fetchUser(userData._id);
             } else {
               message.error('Failed to edit user');
             }

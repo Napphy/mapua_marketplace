@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 const getProduct = () => {
     const [products, setProducts] = useState([]);
+    const [users, setUsers] = useState([]);
     const [allProducts, setAllProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -30,6 +31,31 @@ const getProduct = () => {
         }
     };
 
+
+    const fetchUser = async (userID) => {
+        try{
+            setError(null);
+            setLoading(true);
+
+            const res = await fetch(`https://marketplace-3ph4.onrender.com/getUser/${userID}`, {
+                method: 'GET',
+            });
+
+            const data = await res.json();
+            if (res.status === 200) {
+                setUsers(data.user);
+            } else if (res.status === 400) {
+                setError(data.message);
+            } else {
+                setError('Error fetching products');
+            }
+        }catch (error) {
+            setError('Error fetching User');
+            setLoading(false);
+            console.error('Error fetching user:', error);
+        }
+    }
+
     const fetchAllProducts = async () => {
         try{
             const res = await fetch(`https://marketplace-3ph4.onrender.com/getProducts`, {
@@ -50,7 +76,7 @@ const getProduct = () => {
         }
     }
 
-    return { allProducts, products, loading, error, fetchProductsByUser, fetchAllProducts };
+    return { allProducts, products, loading, error, fetchProductsByUser, fetchAllProducts, fetchUser };
 };
 
 export default getProduct;

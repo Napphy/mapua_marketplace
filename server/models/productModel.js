@@ -28,7 +28,11 @@ const productSchema = new mongoose.Schema({
     image: {
         type: String,
         required: true,
-    }
+    },
+    createdByID: {
+        type: String,
+        required:true,
+   },
 });
 
 const Product = mongoose.model('product', productSchema);

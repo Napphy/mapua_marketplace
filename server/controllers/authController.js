@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const createError = require('../utils/appErrors');
 const Product = require('../models/productModel');
+const mongoose = require('mongoose');
 
 
 // Registering
@@ -114,6 +115,7 @@ exports.upload = async (req, res, next) => {
                     createdByEmail: newUpload.createdByEmail,
                     createdByNumber: newUpload.createdByNumber,
                     image: newUpload.image,
+                    createdByID : newUpload.createdByID,
                 },
             });
         } catch (error) {
@@ -137,13 +139,13 @@ exports.getProducts = async (req, res, next) => {
 
 exports.getProductByUser = async (req, res, next) => {
     try {
-        const { createdBy } = req.query;
+        const { createdByID } = req.query;
 
-        if (!createdBy) {
+        if (!createdByID) {
             return next(new Error('createdBy field is required!'));
         }
 
-        const products = await Product.find({ createdBy });
+        const products = await Product.find({ createdByID });
 
         res.status(200).json({
             status: 'success',
@@ -158,18 +160,29 @@ exports.getProductByUser = async (req, res, next) => {
 
 exports.getUser = async (req, res, next) => {
     try {
-        const { userId } = req.query;
+        const { userId } = req.params;
 
         if (!userId) {
             return next(new Error('userId field is required!'));
         }
 
-        const user = await User.find({ userId });
+        const objectId = new mongoose.Types.ObjectId(userId);
+
+        const user = await User.findById(objectId);
+
+        if(!user){
+            res.status(400).json({
+                message: 'no user found',
+            });
+        }
+        
+
+        const { name, email, number } = user;
 
         res.status(200).json({
             status: 'success',
             message: 'User fetched successfully',
-            user,
+            user: { name, email, number },
         });
     } catch (error) {
         console.error('Error fetching user:', error);
