@@ -6,18 +6,17 @@ const Product = require('../models/productModel');
 const mongoose = require('mongoose');
 
 
-// Registering
 exports.signup = async (req, res, next) => {
     try{
 
-        // check if email already used
+
         const existingEmail = await User.findOne({email: req.body.email});
 
         if(existingEmail){
             return next(new createError("Email already taken!"));
         }
 
-        // check if number already used
+
         const existingNumber = await User.findOne({ number: req.body.number });
 
         if(existingNumber){
@@ -32,7 +31,7 @@ exports.signup = async (req, res, next) => {
             password: hashedPassword,
         });
 
-        //add Token to user
+ 
         const token = jwt.sign({_id: newUser._id}, process.env.JWT_TOKEN, {
             expiresIn: '1d',
         })
@@ -56,7 +55,7 @@ exports.signup = async (req, res, next) => {
 };
 
 
-//Logging in
+
 exports.login = async (req, res, next) => {
     try{
         const { email, password } = req.body;
@@ -96,7 +95,7 @@ exports.login = async (req, res, next) => {
 
 
 
- //Uploading products
+
 exports.upload = async (req, res, next) => {
         try {
             const newUpload = await Product.create({
@@ -123,7 +122,7 @@ exports.upload = async (req, res, next) => {
         }
 }
 
-//Getting all products
+
 exports.getProducts = async (req, res, next) => {
     try{
         const products = await Product.find();
@@ -295,6 +294,20 @@ exports.editUser = async (req, res, next) => {
 
         Object.assign(existingUser, updatedFields);
         await existingUser.save();
+
+        // Update all products with the same createdByID as userId
+        const updateProductFields = {};
+        if (updatedFields.name) {
+            updateProductFields.createdBy = updatedFields.name;
+        }
+        if (updatedFields.email) {
+            updateProductFields.createdByEmail = updatedFields.email;
+        }
+        if (updatedFields.number) {
+            updateProductFields.createdByNumber = updatedFields.number;
+        }
+
+        await Product.updateMany({ createdByID: userId }, updateProductFields);
 
         res.status(200).json({
             status: 'success',
