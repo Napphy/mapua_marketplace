@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
     }
 
-    const authValues = { token, isAuthenticated, login, logout, userData };
+    const authValues = { token, isAuthenticated, login, logout, userData, setUserData };
 
   return <AuthContext.Provider value={authValues}>
     {children}

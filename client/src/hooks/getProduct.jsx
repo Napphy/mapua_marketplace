@@ -1,17 +1,18 @@
 import { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 
 const getProduct = () => {
+    const { setUserData } = useAuth()
     const [products, setProducts] = useState([]);
-    const [users, setUsers] = useState([]);
     const [allProducts, setAllProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchProductsByUser = async (userName) => {
+    const fetchProductsByUser = async (userId) => {
         try {
             setError(null);
             setLoading(true);
-            const res = await fetch(`https://marketplace-3ph4.onrender.com/getProductsByUser?createdBy=${userName}`, {
+            const res = await fetch(`https://marketplace-3ph4.onrender.com/getProductsByUser?createdByID=${userId}`, {
                 method: 'GET',
             });
             const data = await res.json();
@@ -43,7 +44,7 @@ const getProduct = () => {
 
             const data = await res.json();
             if (res.status === 200) {
-                setUsers(data.user);
+                setUserData(data)
             } else if (res.status === 400) {
                 setError(data.message);
             } else {

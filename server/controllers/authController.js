@@ -142,7 +142,7 @@ exports.getProductByUser = async (req, res, next) => {
         const { createdByID } = req.query;
 
         if (!createdByID) {
-            return next(new Error('createdBy field is required!'));
+            return next(new Error('createdByID field is required!'));
         }
 
         const products = await Product.find({ createdByID });
@@ -182,7 +182,7 @@ exports.getUser = async (req, res, next) => {
         res.status(200).json({
             status: 'success',
             message: 'User fetched successfully',
-            user: { name, email, number },
+            user: { name, email, number, _id },
         });
     } catch (error) {
         console.error('Error fetching user:', error);

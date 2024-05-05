@@ -111,6 +111,7 @@ const Dashboard = () => {
     const refreshItems = async (name) => {
       try {
         fetchProductsByUser(userData._id); 
+        fetchUser(userData._id);
         console.log('refresh');
       }catch(error){
         console.error(error);
@@ -224,7 +225,6 @@ const handleEditUserInfo = async () => {
               message.success('User edited successfully');
               setEditModalVisible(false);
               editUserForm.resetFields();
-              fetchUser(userData._id);
               fetchUser(userData._id);
             } else {
               message.error('Failed to edit user');
