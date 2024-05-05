@@ -217,15 +217,14 @@ const handleEditUserInfo = async () => {
       editUserForm.validateFields().then((values) => {
         const { editedName, editedEmail, editedNumber, editedPassword } = values;
         let dataToUpdate = { name: editedName, email: editedEmail, number: editedNumber, password: editedPassword };
-  
-          console.log('User to update:', dataToUpdate);
-  
+
           editUser(userData._id, dataToUpdate).then((success) => {
             if (success) {
               message.success('User edited successfully');
               setEditModalVisible(false);
               editUserForm.resetFields();
               fetchUser(userData._id);
+              setUserEditModal(false);
             } else {
               message.error('Failed to edit user');
             }
