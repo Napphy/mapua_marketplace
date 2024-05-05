@@ -208,8 +208,6 @@ const editUserModalCancel = async () => {
 
 const handleEditUserInfo = async () => {
     try {
-
-      console.log('Edit User Form:', editUserForm);
       if (!editUserForm) {
         console.error('Edit user form not initialized.');
         return;

@@ -8,6 +8,7 @@ router.post('/login', authController.login);
 router.post('/upload', authController.upload);
 router.get('/getProducts', authController.getProducts);
 router.get('/getProductsByUser', authController.getProductByUser);
+router.get('/getUser/:userId', authController.getUser);
 router.delete('/delete/:productId' ,authController.deleteItem);
 router.put('/edit/:productId', authController.editItem);
 router.put('/edit/user/:userId', authController.editUser);

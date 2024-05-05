@@ -156,6 +156,27 @@ exports.getProductByUser = async (req, res, next) => {
     }
 };
 
+exports.getUser = async (req, res, next) => {
+    try {
+        const { userId } = req.query;
+
+        if (!userId) {
+            return next(new Error('userId field is required!'));
+        }
+
+        const user = await User.find({ userId });
+
+        res.status(200).json({
+            status: 'success',
+            message: 'User fetched successfully',
+            user,
+        });
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        next(error);
+    }
+};
+
 
 exports.deleteItem = async (req, res, next) => {
     try {
