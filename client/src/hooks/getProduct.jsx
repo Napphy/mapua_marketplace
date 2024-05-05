@@ -44,7 +44,8 @@ const getProduct = () => {
 
             const data = await res.json();
             if (res.status === 200) {
-                setUserData(data)
+                const { user } = data;
+                setUserData(user)
             } else if (res.status === 400) {
                 setError(data.message);
             } else {
