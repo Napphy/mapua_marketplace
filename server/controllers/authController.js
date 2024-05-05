@@ -201,6 +201,7 @@ exports.editItem = async (req, res, next) => {
         if (req.body.image && req.body.image !== existingProduct.image) {
             updatedFields.image = req.body.image;
         }
+        
 
 
         if (Object.keys(updatedFields).length === 0) {
@@ -226,6 +227,56 @@ exports.editItem = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.editUser = async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+
+        const { name, email, number, password } = req.body;
+
+        const existingUser = await User.findById(userId);
+
+        const updatedFields = {};
+        if (name && name !== existingUser.name) {
+            updatedFields.name = name;
+        }
+        if (email && email !== existingUser.email) {
+            updatedFields.email = email;
+        }
+        if (number && number !== existingUser.number) {
+            updatedFields.number = number;
+        }
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 12);
+            updatedFields.password = hashedPassword;
+        }
+
+        if (Object.keys(updatedFields).length === 0) {
+            return res.status(200).json({
+                status: 'success',
+                message: 'No changes detected. User information remains unchanged.',
+                user: existingUser,
+            });
+        }
+
+        Object.assign(existingUser, updatedFields);
+        await existingUser.save();
+
+        res.status(200).json({
+            status: 'success',
+            message: 'User updated successfully',
+            user: existingUser,
+        });
+    } catch (error) {
+        console.error('Error updating user:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+        next(error);
+    }
+};
+
 
 
 

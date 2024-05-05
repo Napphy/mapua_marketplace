@@ -1,7 +1,7 @@
 import { Avatar, Button, Card, Typography, Flex, Space, Modal, Form, Input, InputNumber, Upload, message, Table, FloatButton  } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { UserOutlined, ReloadOutlined } from '@ant-design/icons';
+import { UserOutlined, ReloadOutlined, EditOutlined  } from '@ant-design/icons';
 import useProduct from '../hooks/useProduct';
 import axios from 'axios';
 import getProduct from '../hooks/getProduct';
@@ -17,10 +17,13 @@ const Dashboard = () => {
   const { fetchProductsByUser, products } = getProduct();
   const { TextArea } = Input;
   const [img, setImg] = useState(null);
-  const { deleteItem, editItem } = useActions();
+  const { deleteItem, editItem, editUser } = useActions();
   const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editUserModal, setUserEditModal] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const [editForm] = Form.useForm();
+  const [editUserForm] = Form.useForm();
+ 
 
   
 
@@ -171,49 +174,10 @@ const Dashboard = () => {
     }
   };
 
-
-  
-  
-
   const editModalCancel = async () => {
     editForm.resetFields();
     setEditModalVisible(false);
   }
-  
-
-  const columns = [
-    {
-        title: 'Item Name',
-        dataIndex: 'item',
-        key: 'item',
-    },
-    {
-        title: 'Price in Peso',
-        dataIndex: 'price',
-        key: 'price',
-    },
-    {
-        title: 'Description',
-        dataIndex: 'description',
-        key: 'description',
-    },
-    {
-        title: 'Image',
-        dataIndex: 'image',
-        key: 'image',
-        render: (image) => <img src={image} alt="Product" style={{ width: 100, height: 100 }} />,
-    },
-    {
-      title: 'Actions',
-      key: 'actions',
-      render: (text, record) => (
-        <Space size="small">
-          <Button type="primary" onClick={() => handleEdit(record._id)}>Edit</Button>
-          <Button danger onClick={() => handleDelete(record)}>Delete</Button>
-        </Space>
-      ),
-    },
-];
 
 const handleDelete = async (record) => {
   try {
@@ -221,9 +185,93 @@ const handleDelete = async (record) => {
     await deleteItem(_id); 
     fetchProductsByUser(userData.name); 
   }catch(error){
-    message(error);
+    message.error(error);
   }
 };
+
+const showEditModal = async () => {
+  try{
+    setUserEditModal(true);
+
+  }catch(error){
+    message.error(error);
+  }
+}
+
+const editUserModalCancel = async () => {
+  try{
+    setUserEditModal(false);
+  }catch(error){
+    message.error(error);
+  }
+}
+
+const handleEditUserInfo = async () => {
+    try {
+
+      console.log('Edit User Form:', editUserForm);
+      if (!editUserForm) {
+        console.error('Edit user form not initialized.');
+        return;
+      }
+  
+      editUserForm.validateFields().then((values) => {
+        const { editedName, editedEmail, editedNumber, editedPassword } = values;
+        let dataToUpdate = { name: editedName, email: editedEmail, number: editedNumber, password: editedPassword };
+  
+          console.log('User to update:', dataToUpdate);
+  
+          editUser(userData._id, dataToUpdate).then((success) => {
+            if (success) {
+              message.success('User edited successfully');
+              setEditModalVisible(false);
+              editUserForm.resetFields();
+            } else {
+              message.error('Failed to edit user');
+            }
+          });
+    
+      });
+    } catch (error) {
+      console.error('Error editing user:', error);
+      message.error('Failed to edit user');
+    }
+}
+
+
+const columns = [
+  {
+      title: 'Item Name',
+      dataIndex: 'item',
+      key: 'item',
+  },
+  {
+      title: 'Price in Peso',
+      dataIndex: 'price',
+      key: 'price',
+  },
+  {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+  },
+  {
+      title: 'Image',
+      dataIndex: 'image',
+      key: 'image',
+      render: (image) => <img src={image} alt="Product" style={{ width: 100, height: 100 }} />,
+  },
+  {
+    title: 'Actions',
+    key: 'actions',
+    render: (text, record) => (
+      <Space size="small">
+        <Button type="primary" onClick={() => handleEdit(record._id)}>Edit</Button>
+        <Button danger onClick={() => handleDelete(record)}>Delete</Button>
+      </Space>
+    ),
+  },
+];
 
 
   return (
@@ -246,7 +294,8 @@ const handleDelete = async (record) => {
                 <Typography.Title level={2} strong className='username'>
                   {userData.name}
                 </Typography.Title>
-                <Button onClick={handleLogout}>Logout</Button>
+                <Button danger onClick={handleLogout}>Logout</Button>
+                <Button onClick={showEditModal} icon={<EditOutlined />}></Button>
               </Flex>
             </Card>
             <div className='full-width-container'>
@@ -267,6 +316,38 @@ const handleDelete = async (record) => {
             icon = {<ReloadOutlined />}
             />
     </div>
+
+
+    <Modal
+        title="Edit User Information"
+        open={editUserModal}
+        onCancel={editUserModalCancel}
+        footer={[
+          <Button key="back" onClick={editUserModalCancel}>
+            Cancel
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleEditUserInfo}>
+            Submit
+          </Button>,
+        ]}
+      >
+        <Form form={editUserForm} layout="vertical">
+          <Form.Item label="Username" name="editedName" initialValue={userData.name}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Email" name="editedEmail" initialValue={userData.email}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Phone Number" name="editedNumber" initialValue={userData.phoneNumber}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Password" name="editedPassword" >
+            <Input type='password' />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+
       <Modal
         open={open}
         title="Fill information here!"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Space, Modal, message, FloatButton  } from 'antd';
-import { ReloadOutlined } from '@ant-design/icons';
+import { ReloadOutlined, CustomerServiceOutlined } from '@ant-design/icons';
 import getProduct from '../hooks/getProduct';
 import  Footer  from './components/Footer';
 import  NavBar  from './components/Navbar'
@@ -11,20 +11,37 @@ import './Home.css';
 const Home = () => {
     const { userData, logout } = useAuth();
     const { fetchAllProducts, allProducts } = getProduct();
+    const [logoutTimeout, setLogoutTimeout] = useState(null);
 
     useEffect(() => {
 
-        const handleBeforeUnload = (e) => {
-            e.preventDefault();
-            logout(); 
+
+        const handleInactiveLogout = () => {
+            logout();
+        };
+
+        let timeout;
+
+        const resetTimeout = () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(handleInactiveLogout, 600000); // 10 minutes
         };
 
         fetchAllProducts();
 
-        window.addEventListener('beforeunload', handleBeforeUnload);
+        const events = ['load', 'mousemove', 'mousedown', 'click', 'scroll', 'keypress'];
+
+        events.forEach((event) => {
+            window.addEventListener(event, resetTimeout);
+        });
+
+        resetTimeout(); // Start the timer initially
 
         return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
+            clearTimeout(timeout);
+            events.forEach((event) => {
+                window.removeEventListener(event, resetTimeout);
+            });
         };
     }, [logout]);
         
@@ -50,6 +67,7 @@ const Home = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [canSendSMS, setCanSendSMS] = useState(true);
+    const [supportModalVisible, setSupportModalVisible] = useState(false);
 
     const handleCancel = () => {
         setModalVisible(false);
@@ -59,6 +77,8 @@ const Home = () => {
         setSelectedProduct(product);
         setModalVisible(true);
     };
+
+
 
     const debouncedSendNotif = async (item, number) => {
 
@@ -101,6 +121,28 @@ const Home = () => {
         }, 60000);
     };
 
+
+    const handleEmail = async (action) => {
+        let subject = '';
+        let body = '';
+        
+        if (action === 'donate') {
+            subject = 'Donation Inquiry';
+            body = 'I would like to inquire about making a donation. Please provide me with more information.';
+        } else if (action === 'ask') {
+            subject = 'Question Inquiry';
+            body = 'I have a question regarding your service. Can you please assist me?';
+        }
+        
+        const email = 'dosgavinojr@mymail.mapua.edu.ph';
+        
+        const mailToLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        
+        window.location.href = mailToLink;
+    }
+
+    
+
     return (
         <>
 
@@ -128,13 +170,34 @@ const Home = () => {
                     ))}
                 </div>
             </Space>
-            <FloatButton 
+             <FloatButton.Group>
+
+             <FloatButton 
             type="primary" 
-            onClick={refreshItems}  
+            onClick={ refreshItems }  
             icon = {<ReloadOutlined />}
             />
                 
-            
+            <FloatButton
+            icon= {< CustomerServiceOutlined />}
+            onClick={ () => setSupportModalVisible(true) }
+            />
+
+            </FloatButton.Group>       
+
+            <Modal
+                title="Contact Support"
+                open={supportModalVisible}
+                onCancel={() => setSupportModalVisible(false)}
+                footer={[ 
+                <Button type="primary" onClick={() => handleEmail('donate')}>Donate</Button>,
+                <Button onClick={() => handleEmail('ask')}>Contact Support</Button>,
+                <Button danger onClick={() => setSupportModalVisible(false)}>Close</Button>
+            ]}
+            >
+               <p>Please choose an option.</p>
+            </Modal>
+
             <Modal 
                 title="Interested?"
                 open={modalVisible} 

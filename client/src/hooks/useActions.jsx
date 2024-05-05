@@ -51,9 +51,35 @@ const useActions = () => {
             return false;
         }
     };
+
+    const editUser = async (userId, newData) => {
+        try {
+            setError(null);
+            setLoading(true);
+            const res = await fetch(`https://marketplace-3ph4.onrender.com/edit/user/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newData),
+            });
+    
+            if (!res.ok) {
+                throw new Error('Failed to edit user');
+            }
+    
+            setLoading(false);
+            return true;
+        } catch (error) {
+            setLoading(false);
+            setError('Error editing item');
+            console.error('Error editing item:', error);
+            return false;
+        }
+    };
     
 
-    return { loading, error, deleteItem, editItem };
+    return { loading, error, deleteItem, editItem, editUser };
 };
 
 export default useActions;
