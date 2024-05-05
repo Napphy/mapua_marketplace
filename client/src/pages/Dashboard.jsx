@@ -337,7 +337,7 @@ const columns = [
           <Form.Item label="Email" name="editedEmail" initialValue={userData.email}>
             <Input />
           </Form.Item>
-          <Form.Item label="Phone Number" name="editedNumber" initialValue={userData.phoneNumber}>
+          <Form.Item label="Phone Number" name="editedNumber" initialValue={userData.number}>
             <Input />
           </Form.Item>
           <Form.Item label="Password" name="editedPassword" >
